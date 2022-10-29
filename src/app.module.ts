@@ -11,6 +11,7 @@ import { RequestLoanCommandHandler } from './loan/handlers/requestLoan.handler';
 import { ApproveLoanCommandHandler } from './loan/handlers/approveLoan.handler';
 
 const CommandHandlers = [RequestLoanCommandHandler, ApproveLoanCommandHandler];
+const Processors = [];
 
 @Module({
   imports: [CqrsModule],
@@ -21,6 +22,7 @@ const CommandHandlers = [RequestLoanCommandHandler, ApproveLoanCommandHandler];
     CustomerService,
     PrismaService,
     ...CommandHandlers,
+    ...Processors,
   ],
 })
 export class AppModule {}
