@@ -9,9 +9,10 @@ import { PrismaService } from './prisma/prisma.service';
 import { CqrsModule } from '@nestjs/cqrs';
 import { RequestLoanCommandHandler } from './loan/handlers/requestLoan.handler';
 import { ApproveLoanCommandHandler } from './loan/handlers/approveLoan.handler';
+import { LoanRequestedProcessor } from './loan/processors/LoanRequested.processor';
 
 const CommandHandlers = [RequestLoanCommandHandler, ApproveLoanCommandHandler];
-const Processors = [];
+const Processors = [LoanRequestedProcessor];
 
 @Module({
   imports: [CqrsModule],

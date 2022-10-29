@@ -32,7 +32,7 @@ export class Aggregate extends AggregateRoot {
       Number(result.nextExpectedRevision),
     );
 
-    // this._eventBus.publish()
+    this._eventBus.publish(event);
   }
 
   private async _upsertInReadModel(
