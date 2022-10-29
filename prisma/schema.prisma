@@ -17,6 +17,7 @@ model Loan {
   customer_id String
   created_at  DateTime  @default(now())
   updated_at  DateTime?
+  version     Int       @default(0)
 }
 
 model Customer {
@@ -28,6 +29,7 @@ model Customer {
   risk           Int
   created_at     DateTime  @default(now())
   updated_at     DateTime?
+  version        Int       @default(0)
 }
 
 model Movements {
@@ -38,4 +40,5 @@ model Movements {
   state       String
   created_at  DateTime  @default(now())
   updated_at  DateTime?
+  version     Int       @default(0)
 }

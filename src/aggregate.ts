@@ -25,13 +25,18 @@ export class Aggregate extends AggregateRoot {
       data,
     });
 
-    await client.appendToStream(`${stream}-${id}`, [ev]);
-    await this._upsertInReadModel(stream, data);
+    const result = await client.appendToStream(`${stream}-${id}`, [ev]);
+    await this._upsertInReadModel(
+      stream,
+      data,
+      Number(result.nextExpectedRevision),
+    );
   }
 
   private async _upsertInReadModel(
     name: string,
     data: UpserData,
+    version: number,
   ): Promise<void> {
     const readModelName = name.toLocaleLowerCase();
 
@@ -45,7 +50,10 @@ export class Aggregate extends AggregateRoot {
 
     if (result) {
       return this._prismaService[readModelName].update({
-        data: entity,
+        data: {
+          ...entity,
+          version,
+        },
         where: {
           id: entity.id,
         },
@@ -53,7 +61,10 @@ export class Aggregate extends AggregateRoot {
     }
 
     return this._prismaService[readModelName].create({
-      data: entity,
+      data: {
+        ...entity,
+        version,
+      },
     });
   }
 }
