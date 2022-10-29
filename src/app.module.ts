@@ -6,10 +6,21 @@ import { LoanService } from './loan/loan.service';
 import { CustomerController } from './customer/customer.controller';
 import { CustomerService } from './customer/customer.service';
 import { PrismaService } from './prisma/prisma.service';
+import { CqrsModule } from '@nestjs/cqrs';
+import { RequestLoanCommandHandler } from './loan/handlers/requestLoan.handler';
+import { ApproveLoanCommandHandler } from './loan/handlers/approveLoan.handler';
+
+const CommandHandlers = [RequestLoanCommandHandler, ApproveLoanCommandHandler];
 
 @Module({
-  imports: [],
+  imports: [CqrsModule],
   controllers: [AppController, LoanController, CustomerController],
-  providers: [AppService, LoanService, CustomerService, PrismaService],
+  providers: [
+    AppService,
+    LoanService,
+    CustomerService,
+    PrismaService,
+    ...CommandHandlers,
+  ],
 })
 export class AppModule {}

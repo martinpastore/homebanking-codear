@@ -4,6 +4,11 @@ export enum LoanStatesEnum {
   rejected = 'rejected',
 }
 
+export enum LoanEventTypeEnum {
+  RequestLoan = 'RequestLoan',
+  ApproveLoan = 'ApproveLoan',
+}
+
 export class LoanDto {
   id!: string;
   amount!: number;
