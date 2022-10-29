@@ -3,6 +3,8 @@ import { v4 as uuid } from 'uuid';
 import { AccountStatusEnum, CustomerDto } from './customer.dto';
 import { CustomerCreatedEvent } from './events/CustomerCreated.event';
 import { generateAccountNumber } from '../utils/account';
+import { CustomerAnalysisRejectedEvent } from './events/CustomerAnalysisRejected.event';
+import { CustomerAnalysisApprovedEvent } from './events/CustomerAnalysisApproved.event';
 
 export class Customer extends Aggregate {
   props: CustomerDto;
@@ -59,7 +61,15 @@ export class Customer extends Aggregate {
   }
 
   analyse(customer: Partial<CustomerDto>): Customer {
-    console.log('analysing customer');
+    const { id, risk } = this._unwrapProperties(customer);
+
+    const event =
+      risk > 5
+        ? new CustomerAnalysisRejectedEvent(id)
+        : new CustomerAnalysisApprovedEvent(id);
+
+    this.applyEvents('Customer', id, event);
+
     return this;
   }
 }
