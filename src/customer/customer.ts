@@ -57,4 +57,9 @@ export class Customer extends Aggregate {
 
     return this;
   }
+
+  analyse(customer: Partial<CustomerDto>): Customer {
+    console.log('analysing customer');
+    return this;
+  }
 }
