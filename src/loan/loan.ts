@@ -4,19 +4,22 @@ import { LoanDto } from './loan.dto';
 import { LoanRequestedEvent } from './events';
 
 export class Loan extends Aggregate {
-  constructor() {
-    super();
+  props: LoanDto;
+
+  private _unwrapProperties(props: LoanDto): LoanDto {
+    this.props = props || this.props;
+
+    return this.props;
   }
 
   async request(data: LoanDto): Promise<Loan> {
     const id = uuid();
 
-    await this.applyEvents(`Loan-${id}`, {
+    const loan = this._unwrapProperties({ id, ...data });
+
+    await this.applyEvents('Loan', id, {
       type: LoanRequestedEvent,
-      data: {
-        ...data,
-        id,
-      },
+      data: loan,
     });
 
     return this;
