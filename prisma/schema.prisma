@@ -22,7 +22,7 @@ model Loan {
 
 model Customer {
   id             String    @id @default(uuid())
-  account_number Int
+  account_number String
   account_status String
   first_name     String
   last_name      String

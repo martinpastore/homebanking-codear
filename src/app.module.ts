@@ -10,8 +10,13 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { RequestLoanCommandHandler } from './loan/handlers/requestLoan.handler';
 import { ApproveLoanCommandHandler } from './loan/handlers/approveLoan.handler';
 import { LoanRequestedProcessor } from './loan/processors/LoanRequested.processor';
+import { CreateCustomerCommandHandler } from './customer/handlers/createCustomer.handler';
 
-const CommandHandlers = [RequestLoanCommandHandler, ApproveLoanCommandHandler];
+const CommandHandlers = [
+  RequestLoanCommandHandler,
+  ApproveLoanCommandHandler,
+  CreateCustomerCommandHandler,
+];
 const Processors = [LoanRequestedProcessor];
 
 @Module({
