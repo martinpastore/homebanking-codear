@@ -2,6 +2,7 @@ import { jsonEvent } from '@eventstore/db-client';
 import { AggregateRoot } from '@nestjs/cqrs';
 import { client } from './event-store';
 import { PrismaService } from './prisma/prisma.service';
+import { objectToSnakeCase } from './utils/object';
 
 type UpserData = {
   id: string;
@@ -33,23 +34,26 @@ export class Aggregate extends AggregateRoot {
     data: UpserData,
   ): Promise<void> {
     const readModelName = name.toLocaleLowerCase();
-    const entity = await this._prismaService[readModelName].findFirst({
+
+    const entity = objectToSnakeCase(data) as UpserData;
+
+    const result = await this._prismaService[readModelName].findFirst({
       where: {
-        id: data.id,
+        id: entity.id,
       },
     });
 
-    if (entity) {
+    if (result) {
       return this._prismaService[readModelName].update({
-        data,
+        data: entity,
         where: {
-          id: data.id,
+          id: entity.id,
         },
       });
     }
 
     return this._prismaService[readModelName].create({
-      data,
+      data: entity,
     });
   }
 }

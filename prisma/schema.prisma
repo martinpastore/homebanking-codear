@@ -11,6 +11,31 @@ datasource db {
 }
 
 model Loan {
-  id     String @id @default(uuid())
-  amount Int
+  id          String    @id @default(uuid())
+  amount      Int
+  state       String
+  customer_id String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime?
+}
+
+model Customer {
+  id             String    @id @default(uuid())
+  account_number Int
+  account_status String
+  first_name     String
+  last_name      String
+  risk           Int
+  created_at     DateTime  @default(now())
+  updated_at     DateTime?
+}
+
+model Movements {
+  id          String    @id @default(uuid())
+  amount      Int
+  customer_id String
+  reference   String
+  state       String
+  created_at  DateTime  @default(now())
+  updated_at  DateTime?
 }
