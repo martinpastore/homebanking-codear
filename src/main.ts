@@ -7,7 +7,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // EventStore
-  await connectToEventStore();
+  await connectToEventStore({
+    persistentSuscriptions: [
+      {
+        stream: '$ce-Loan',
+        group: 'Loan',
+      },
+    ],
+  });
 
   // Prisma
   const prismaService = app.get(PrismaService);
