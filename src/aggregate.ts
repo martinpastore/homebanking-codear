@@ -1,4 +1,5 @@
 import { jsonEvent } from '@eventstore/db-client';
+import { Logger } from '@nestjs/common';
 import { AggregateRoot } from '@nestjs/cqrs';
 import { client } from './event-store';
 

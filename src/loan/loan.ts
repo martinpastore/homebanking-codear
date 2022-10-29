@@ -8,12 +8,17 @@ export class Loan extends Aggregate {
     super();
   }
 
-  async request(data: LoanDto): Promise<void> {
+  async request(data: LoanDto): Promise<Loan> {
     const id = uuid();
 
     await this.applyEvents(`Loan-${id}`, {
       type: LoanRequestedEvent,
-      data,
+      data: {
+        ...data,
+        id,
+      },
     });
+
+    return this;
   }
 }
