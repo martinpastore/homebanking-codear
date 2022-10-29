@@ -12,7 +12,7 @@ export enum LoanEventTypeEnum {
 export class LoanDto {
   id!: string;
   amount!: number;
-  customerId!: number;
+  customerId!: string;
   state!: LoanStatesEnum;
   createdAt!: string;
   updatedAt: string;

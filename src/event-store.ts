@@ -8,12 +8,20 @@ import {
 import { Logger } from '@nestjs/common';
 
 type PersistentSuscription = {
+  type: string;
   stream: string;
-  group: string;
+  persistentSubscriptionName: string;
 };
 
-type Opts = {
-  persistentSuscriptions: PersistentSuscription[];
+export const eventStoreBusConfig = {
+  subscriptions: [
+    {
+      type: 'persistent',
+      stream: '$ce-Loan',
+      persistentSubscriptionName: 'Loan',
+    },
+  ],
+  events: {},
 };
 
 const client = EventStoreDBClient.connectionString(
@@ -29,7 +37,7 @@ const createSuscriptions = async (
 
   const suscription = await client.getPersistentSubscriptionToStreamInfo(
     opts.stream,
-    opts.group,
+    opts.persistentSubscriptionName,
   );
 
   if (suscription?.status === 'Live') return;
@@ -38,13 +46,13 @@ const createSuscriptions = async (
 
   return client.createPersistentSubscriptionToStream(
     opts.stream,
-    opts.group,
+    opts.persistentSubscriptionName,
     persistentSubscriptionToStreamSettingsFromDefaults(),
     options,
   );
 };
 
-const connect = async (opts: Opts) => {
+const connect = async () => {
   await client.readAll({
     direction: FORWARDS,
     fromPosition: START,
@@ -52,7 +60,7 @@ const connect = async (opts: Opts) => {
   });
 
   await Bluebird.mapSeries(
-    opts.persistentSuscriptions,
+    eventStoreBusConfig.subscriptions,
     async (it: PersistentSuscription) => {
       await createSuscriptions(it);
     },

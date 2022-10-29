@@ -1,7 +1,8 @@
 import { Aggregate } from '../aggregate';
 import { v4 as uuid } from 'uuid';
 import { LoanDto, LoanStatesEnum } from './loan.dto';
-import { LoanApprovedEvent, LoanRequestedEvent } from './events';
+import { LoanRequestedEvent } from './events/LoanRequested.event';
+import { LoanApprovedEvent } from './events/LoanApproved.event';
 
 export class Loan extends Aggregate {
   props: LoanDto;
@@ -27,23 +28,27 @@ export class Loan extends Aggregate {
 
     const loan = this._unwrapProperties({ id, ...data });
 
-    await this.applyEvents('Loan', id, {
-      type: LoanRequestedEvent,
-      data: loan,
-    });
+    const { amount, state, createdAt, customerId } = loan;
+
+    await this.applyEvents(
+      'Loan',
+      id,
+      new LoanRequestedEvent(id, amount, state, customerId, createdAt),
+    );
 
     return this;
   }
 
   async approve(data: Partial<LoanDto>): Promise<Loan> {
-    await this.applyEvents('Loan', data.id, {
-      type: LoanApprovedEvent,
-      data: {
-        ...data,
-        state: LoanStatesEnum.approved,
-        updatedAt: new Date().toISOString(),
-      },
-    });
+    await this.applyEvents(
+      'Loan',
+      data.id,
+      new LoanApprovedEvent(
+        data.id,
+        LoanStatesEnum.approved,
+        new Date().toISOString(),
+      ),
+    );
 
     return this;
   }

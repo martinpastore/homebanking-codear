@@ -1,4 +1,4 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ApproveLoanCommand } from '../commands/approveLoan.command';
 import { Loan } from '../loan';
@@ -8,8 +8,11 @@ export class ApproveLoanCommandHandler
   implements ICommandHandler<ApproveLoanCommand>
 {
   loan: Loan;
-  constructor(private _prismaService: PrismaService) {
-    this.loan = new Loan(this._prismaService);
+  constructor(
+    private _prismaService: PrismaService,
+    private _eventBus: EventBus,
+  ) {
+    this.loan = new Loan(this._prismaService, this._eventBus);
   }
 
   async execute(command: ApproveLoanCommand) {

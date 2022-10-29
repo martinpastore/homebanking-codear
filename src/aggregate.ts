@@ -1,5 +1,5 @@
 import { jsonEvent } from '@eventstore/db-client';
-import { AggregateRoot } from '@nestjs/cqrs';
+import { AggregateRoot, EventBus, IEvent } from '@nestjs/cqrs';
 import { client } from './event-store';
 import { PrismaService } from './prisma/prisma.service';
 import { objectToSnakeCase } from './utils/object';
@@ -10,16 +10,16 @@ type UpserData = {
 };
 
 export class Aggregate extends AggregateRoot {
-  constructor(private _prismaService: PrismaService) {
+  constructor(
+    private _prismaService: PrismaService,
+    private _eventBus: EventBus,
+  ) {
     super();
   }
 
-  async applyEvents(
-    stream: string,
-    id: string,
-    event: { type: string; data: any },
-  ): Promise<void> {
-    const { data, type } = event;
+  async applyEvents(stream: string, id: string, event: any): Promise<void> {
+    const data = event;
+    const type = event.constructor.name;
     const ev = jsonEvent({
       type,
       data,
@@ -31,6 +31,8 @@ export class Aggregate extends AggregateRoot {
       data,
       Number(result.nextExpectedRevision),
     );
+
+    // this._eventBus.publish()
   }
 
   private async _upsertInReadModel(
