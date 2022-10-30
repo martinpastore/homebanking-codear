@@ -60,13 +60,20 @@ export class Customer extends Aggregate {
     return this;
   }
 
-  analyse(customer: Partial<CustomerDto>): Customer {
+  analyse(
+    customer: Partial<CustomerDto>,
+    request: { id: string; amount: number },
+  ): Customer {
     const { id, risk } = this._unwrapProperties(customer);
 
     const event =
       risk > 5
-        ? new CustomerAnalysisRejectedEvent(id)
-        : new CustomerAnalysisApprovedEvent(id);
+        ? new CustomerAnalysisRejectedEvent(id, {
+            id: request.id,
+          })
+        : new CustomerAnalysisApprovedEvent(id, {
+            id: request.id,
+          });
 
     this.applyEvents('Customer', id, event);
 

@@ -25,6 +25,8 @@ export class LoanRequestedProcessor
 
     const customer = objectToCamelCase(result) as CustomerDto;
 
-    return this._commandBus.execute(new AnalyseCustomerRiskCommand(customer));
+    return this._commandBus.execute(
+      new AnalyseCustomerRiskCommand<LoanRequestedEvent>(customer, event),
+    );
   }
 }

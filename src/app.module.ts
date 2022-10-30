@@ -12,6 +12,8 @@ import { ApproveLoanCommandHandler } from './loan/handlers/approveLoan.handler';
 import { CreateCustomerCommandHandler } from './customer/handlers/createCustomer.handler';
 import { LoanRequestedProcessor } from './customer/processors/LoanRequested.processor';
 import { AnalyseCustomerRiskCommandHandler } from './customer/handlers/analyseCustomerRisk.handler';
+import { CustomerAnalysisApprovedProcessor } from './loan/processors/CustomerAnalysisApproved.processor';
+import { CustomerAnalysisRejectedProcessor } from './loan/processors/CustomerAnalysisRejected.processor';
 
 const CommandHandlers = [
   RequestLoanCommandHandler,
@@ -19,7 +21,11 @@ const CommandHandlers = [
   CreateCustomerCommandHandler,
   AnalyseCustomerRiskCommandHandler,
 ];
-const Processors = [LoanRequestedProcessor];
+const Processors = [
+  LoanRequestedProcessor,
+  CustomerAnalysisApprovedProcessor,
+  CustomerAnalysisRejectedProcessor,
+];
 
 @Module({
   imports: [CqrsModule],

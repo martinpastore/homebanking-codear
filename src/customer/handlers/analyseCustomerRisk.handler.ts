@@ -5,7 +5,7 @@ import { Customer } from '../customer';
 
 @CommandHandler(AnalyseCustomerRiskCommand)
 export class AnalyseCustomerRiskCommandHandler
-  implements ICommandHandler<AnalyseCustomerRiskCommand>
+  implements ICommandHandler<AnalyseCustomerRiskCommand<any>>
 {
   customer: Customer;
   constructor(
@@ -15,9 +15,9 @@ export class AnalyseCustomerRiskCommandHandler
     this.customer = new Customer(this._prismaService, this._eventBus);
   }
 
-  async execute(command: AnalyseCustomerRiskCommand) {
-    const { data } = command;
+  async execute(command: AnalyseCustomerRiskCommand<any>) {
+    const { data, event } = command;
 
-    return this.customer.analyse(data);
+    return this.customer.analyse(data, event);
   }
 }

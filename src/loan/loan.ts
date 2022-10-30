@@ -52,4 +52,18 @@ export class Loan extends Aggregate {
 
     return this;
   }
+
+  async reject(data: Partial<LoanDto>): Promise<Loan> {
+    await this.applyEvents(
+      'Loan',
+      data.id,
+      new LoanApprovedEvent(
+        data.id,
+        LoanStatesEnum.rejected,
+        new Date().toISOString(),
+      ),
+    );
+
+    return this;
+  }
 }

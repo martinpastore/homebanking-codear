@@ -18,7 +18,8 @@ export class Aggregate extends AggregateRoot {
   }
 
   async applyEvents(stream: string, id: string, event: any): Promise<void> {
-    const data = event;
+    const { metadata, ...data } = event;
+
     const type = event.constructor.name;
     const ev = jsonEvent({
       type,
