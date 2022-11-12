@@ -1,5 +1,6 @@
-import { jsonEvent } from '@eventstore/db-client';
+import { EventType, jsonEvent, ResolvedEvent } from '@eventstore/db-client';
 import { AggregateRoot, EventBus } from '@nestjs/cqrs';
+import { merge } from 'lodash';
 import { client } from './event-store';
 import { PrismaService } from './prisma/prisma.service';
 import { objectToSnakeCase } from './utils/object';
@@ -15,6 +16,16 @@ export class Aggregate extends AggregateRoot {
     private _eventBus: EventBus,
   ) {
     super();
+  }
+
+  static create<K>(events: ResolvedEvent<EventType>[]): K {
+    const aggregate = {};
+
+    events.map((event) => {
+      return merge(aggregate, event.event.data);
+    });
+
+    return aggregate as K;
   }
 
   async applyEvents(stream: string, id: string, event: any): Promise<void> {

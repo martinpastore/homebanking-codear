@@ -1,8 +1,9 @@
 import { CommandBus, EventsHandler, IEventHandler } from '@nestjs/cqrs';
 import { CustomerAnalysisApprovedEvent } from '../../customer/events/CustomerAnalysisApproved.event';
+import { getEventsFromStream } from '../../event-store';
 import { PrismaService } from '../../prisma/prisma.service';
-import { objectToCamelCase } from '../../utils/object';
 import { ApproveLoanCommand } from '../commands/approveLoan.command';
+import { Loan } from '../loan';
 import { LoanDto } from '../loan.dto';
 
 @EventsHandler(CustomerAnalysisApprovedEvent)
@@ -19,13 +20,9 @@ export class CustomerAnalysisApprovedProcessor
       metadata: { id },
     } = event;
 
-    const result = await this._prismaService.loan.findFirst({
-      where: {
-        id,
-      },
-    });
+    const events = await getEventsFromStream(`Loan-${id}`);
 
-    const loan = objectToCamelCase(result) as LoanDto;
+    const loan = Loan.create<LoanDto>(events);
 
     return this._commandBus.execute(new ApproveLoanCommand(loan));
   }
