@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { LoanDto, LoanStatesEnum } from './loan.dto';
 import { LoanRequestedEvent } from './events/LoanRequested.event';
 import { LoanApprovedEvent } from './events/LoanApproved.event';
+import { LoanRejectedEvent } from './events/LoanRejected.event';
 
 export class Loan extends Aggregate {
   props: LoanDto;
@@ -57,7 +58,7 @@ export class Loan extends Aggregate {
     await this.applyEvents(
       'Loan',
       data.id,
-      new LoanApprovedEvent(
+      new LoanRejectedEvent(
         data.id,
         LoanStatesEnum.rejected,
         new Date().toISOString(),
