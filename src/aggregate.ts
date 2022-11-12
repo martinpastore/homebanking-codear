@@ -1,5 +1,5 @@
 import { jsonEvent } from '@eventstore/db-client';
-import { AggregateRoot, EventBus, IEvent } from '@nestjs/cqrs';
+import { AggregateRoot, EventBus } from '@nestjs/cqrs';
 import { client } from './event-store';
 import { PrismaService } from './prisma/prisma.service';
 import { objectToSnakeCase } from './utils/object';

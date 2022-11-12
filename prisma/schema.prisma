@@ -21,24 +21,22 @@ model Loan {
 }
 
 model Customer {
+  id         String    @id @default(uuid())
+  first_name String
+  last_name  String
+  risk       Int
+  created_at DateTime  @default(now())
+  updated_at DateTime?
+  version    Int       @default(0)
+}
+
+model Account {
   id             String    @id @default(uuid())
-  account_number String
-  account_status String
-  first_name     String
-  last_name      String
-  risk           Int
+  status         String
+  number         String
+  customer_id    String
+  current_amount Int
   created_at     DateTime  @default(now())
   updated_at     DateTime?
   version        Int       @default(0)
-}
-
-model Movements {
-  id          String    @id @default(uuid())
-  amount      Int
-  customer_id String
-  reference   String
-  state       String
-  created_at  DateTime  @default(now())
-  updated_at  DateTime?
-  version     Int       @default(0)
 }

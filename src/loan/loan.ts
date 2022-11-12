@@ -47,6 +47,8 @@ export class Loan extends Aggregate {
       new LoanApprovedEvent(
         data.id,
         LoanStatesEnum.approved,
+        data.amount,
+        data.customerId,
         new Date().toISOString(),
       ),
     );

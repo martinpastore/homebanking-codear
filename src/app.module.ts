@@ -15,6 +15,12 @@ import { AnalyseCustomerRiskCommandHandler } from './customer/handlers/analyseCu
 import { CustomerAnalysisApprovedProcessor } from './loan/processors/CustomerAnalysisApproved.processor';
 import { CustomerAnalysisRejectedProcessor } from './loan/processors/CustomerAnalysisRejected.processor';
 import { RejectLoanCommandHandler } from './loan/handlers/rejectLoan.handler';
+import { AccountService } from './account/account.service';
+import { AccountController } from './account/account.controller';
+import { RegisterAccountCommandHandler } from './account/handlers/registerAccount.handler';
+import { CustomerCreatedProcessor } from './account/processors/CustomerCreated.processor';
+import { LoanApprovedProcessor } from './account/processors/LoanApproved.processor';
+import { UpdateAccountAmountCommandHandler } from './account/handlers/updateAccountAmount.handler';
 
 const CommandHandlers = [
   RequestLoanCommandHandler,
@@ -22,21 +28,31 @@ const CommandHandlers = [
   RejectLoanCommandHandler,
   CreateCustomerCommandHandler,
   AnalyseCustomerRiskCommandHandler,
+  RegisterAccountCommandHandler,
+  UpdateAccountAmountCommandHandler,
 ];
 const Processors = [
   LoanRequestedProcessor,
   CustomerAnalysisApprovedProcessor,
   CustomerAnalysisRejectedProcessor,
+  CustomerCreatedProcessor,
+  LoanApprovedProcessor,
 ];
 
 @Module({
   imports: [CqrsModule],
-  controllers: [AppController, LoanController, CustomerController],
+  controllers: [
+    AppController,
+    LoanController,
+    CustomerController,
+    AccountController,
+  ],
   providers: [
     AppService,
     LoanService,
     CustomerService,
     PrismaService,
+    AccountService,
     ...CommandHandlers,
     ...Processors,
   ],
