@@ -18,6 +18,10 @@ export class RequestLoanCommandHandler
   async execute(command: RequestLoanCommand) {
     const { data } = command;
 
+    if (!data.amount) throw new Error('Amount is required to request a loan');
+    if (!data.customerId)
+      throw new Error('Customer id is required to request a loan');
+
     return this.loan.request(data);
   }
 }

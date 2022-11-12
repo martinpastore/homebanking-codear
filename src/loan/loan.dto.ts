@@ -7,6 +7,7 @@ export enum LoanStatesEnum {
 export enum LoanEventTypeEnum {
   RequestLoan = 'RequestLoan',
   ApproveLoan = 'ApproveLoan',
+  RejectLoan = 'RejectLoan',
 }
 
 export class LoanDto {

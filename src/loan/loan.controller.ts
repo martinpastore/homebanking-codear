@@ -10,6 +10,7 @@ type Body = {
 const commandMap = new Map<string, string>([
   [LoanEventTypeEnum.RequestLoan, 'requestLoan'],
   [LoanEventTypeEnum.ApproveLoan, 'approveLoan'],
+  [LoanEventTypeEnum.RejectLoan, 'rejectLoan'],
 ]);
 
 @Controller('loan')

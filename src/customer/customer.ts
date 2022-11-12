@@ -5,19 +5,14 @@ import { CustomerCreatedEvent } from './events/CustomerCreated.event';
 import { generateAccountNumber } from '../utils/account';
 import { CustomerAnalysisRejectedEvent } from './events/CustomerAnalysisRejected.event';
 import { CustomerAnalysisApprovedEvent } from './events/CustomerAnalysisApproved.event';
+import { riskAnalysisRules } from './customer.utils';
 
 export class Customer extends Aggregate {
   props: CustomerDto;
 
   private _unwrapProperties(props: Partial<CustomerDto>): CustomerDto {
-    const {
-      createdAt,
-      accountStatus,
-      accountNumber,
-      risk,
-      firstName,
-      lastName,
-    } = props || this.props;
+    const { createdAt, accountStatus, accountNumber, risk } =
+      props || this.props;
 
     this.props = props as CustomerDto;
 
@@ -25,8 +20,6 @@ export class Customer extends Aggregate {
     if (!accountStatus) this.props.accountStatus = AccountStatusEnum.pending;
     if (!accountNumber) this.props.accountNumber = generateAccountNumber();
     if (!risk) this.props.risk = 0;
-    if (!firstName) this.props.firstName = 'Account';
-    if (!lastName) this.props.lastName = 'Holder';
 
     return this.props;
   }
@@ -66,14 +59,15 @@ export class Customer extends Aggregate {
   ): Customer {
     const { id, risk } = this._unwrapProperties(customer);
 
-    const event =
-      risk > 5
-        ? new CustomerAnalysisRejectedEvent(id, {
-            id: request.id,
-          })
-        : new CustomerAnalysisApprovedEvent(id, {
-            id: request.id,
-          });
+    const passed = riskAnalysisRules(risk, request.amount);
+
+    const event = passed
+      ? new CustomerAnalysisApprovedEvent(id, {
+          id: request.id,
+        })
+      : new CustomerAnalysisRejectedEvent(id, {
+          id: request.id,
+        });
 
     this.applyEvents('Customer', id, event);
 

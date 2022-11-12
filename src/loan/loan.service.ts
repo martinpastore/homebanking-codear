@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApproveLoanCommand } from './commands/approveLoan.command';
+import { RejectLoanCommand } from './commands/rejectLoan.command';
 import { RequestLoanCommand } from './commands/requestLoan.command';
 import { Loan } from './loan';
 import { LoanDto } from './loan.dto';
@@ -15,5 +16,9 @@ export class LoanService {
 
   async approveLoan(data: Partial<LoanDto>): Promise<Loan> {
     return this.commandBus.execute(new ApproveLoanCommand(data));
+  }
+
+  async rejectLoan(data: Partial<LoanDto>): Promise<Loan> {
+    return this.commandBus.execute(new RejectLoanCommand(data));
   }
 }

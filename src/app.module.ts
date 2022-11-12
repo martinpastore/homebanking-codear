@@ -14,10 +14,12 @@ import { LoanRequestedProcessor } from './customer/processors/LoanRequested.proc
 import { AnalyseCustomerRiskCommandHandler } from './customer/handlers/analyseCustomerRisk.handler';
 import { CustomerAnalysisApprovedProcessor } from './loan/processors/CustomerAnalysisApproved.processor';
 import { CustomerAnalysisRejectedProcessor } from './loan/processors/CustomerAnalysisRejected.processor';
+import { RejectLoanCommandHandler } from './loan/handlers/rejectLoan.handler';
 
 const CommandHandlers = [
   RequestLoanCommandHandler,
   ApproveLoanCommandHandler,
+  RejectLoanCommandHandler,
   CreateCustomerCommandHandler,
   AnalyseCustomerRiskCommandHandler,
 ];

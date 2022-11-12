@@ -18,6 +18,9 @@ export class CreateCustomerCommandHandler
   async execute(command: CreateCustomerCommand) {
     const { data } = command;
 
+    if (!data.firstName || !data.lastName)
+      throw new Error('Missing required fields to create a customer');
+
     return this.customer.create(data);
   }
 }
