@@ -18,7 +18,7 @@ export class RegisterAccountCommandHandler
   async execute(command: RegisterAccountCommand) {
     const { data } = command;
 
-    const result = this._prismaService.account.findFirst({
+    const result = await this._prismaService.account.findFirst({
       where: {
         customer_id: data.customerId,
       },
